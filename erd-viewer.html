@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DonorBridge ERD Viewer</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #121a33;
+        --text: #e8ecf7;
+        --muted: #9fb0d6;
+        --accent: #60a5fa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .header {
+        padding: 14px 18px;
+        border-bottom: 1px solid #1f2a4e;
+        background: var(--panel);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      .title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      button {
+        border: 1px solid #2f4275;
+        background: #1a2750;
+        color: var(--text);
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      button:hover {
+        background: #22366e;
+      }
+
+      .viewer {
+        height: calc(100vh - 116px);
+        overflow: auto;
+        padding: 16px;
+      }
+
+      .diagram-wrap {
+        min-width: 1200px;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 16px;
+        transform-origin: top left;
+        transition: transform 0.12s ease;
+      }
+
+      .zoom-note {
+        margin-top: 8px;
+        font-size: 12px;
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="title">DonorBridge Integrated ERD</h1>
+      <p class="subtitle">
+        Use zoom buttons (or Ctrl + mouse wheel) and scroll/pan to inspect every
+        entity.
+      </p>
+      <div class="controls">
+        <button id="zoomOut">- Zoom Out</button>
+        <button id="zoomIn">+ Zoom In</button>
+        <button id="resetZoom">Reset</button>
+      </div>
+      <div class="zoom-note" id="zoomLabel">Zoom: 100%</div>
+    </header>
+
+    <main class="viewer">
+      <div class="diagram-wrap" id="diagramWrap">
+        <pre class="mermaid">
+erDiagram
+    HOSPITAL ||--o{ PATIENT : treats
+    HOSPITAL ||--o{ DONOR : registers
+    HOSPITAL ||--o{ REQUEST : creates
+    HOSPITAL ||--o{ BLOOD_INVENTORY : stores
+
+    PATIENT ||--o{ REQUEST : needs
+    PATIENT ||--o{ MEDICAL_RECORD : has
+
+    DONOR ||--o{ DONOR_ELIGIBILITY : evaluated_by
+    DONOR ||--o{ BLOOD_DONATION : makes
+    DONOR ||--o{ ORGAN_OFFER : provides
+
+    REQUEST ||--|| BLOOD_REQUEST_DETAILS : has
+    REQUEST ||--|| ORGAN_REQUEST_DETAILS : has
+    REQUEST ||--o{ MATCH_CANDIDATE : receives
+
+    BLOOD_DONATION ||--o{ BLOOD_UNIT : produces
+    BLOOD_UNIT }o--|| BLOOD_INVENTORY : tracked_in
+    BLOOD_UNIT ||--o{ MATCH_CANDIDATE : candidate_for
+
+    ORGAN_OFFER ||--o{ MATCH_CANDIDATE : candidate_for
+    MATCH_CANDIDATE ||--o| TRANSPLANT : may_result_in
+
+    CHAT_SESSION ||--o{ CHAT_MESSAGE : contains
+    CHAT_MESSAGE ||--o| INTENT_DETECTION : classified_as
+    INTENT_DETECTION ||--|| SQL_TEMPLATE : maps_to
+    INTENT_DETECTION ||--o{ QUERY_EXECUTION_LOG : executes
+    QUERY_EXECUTION_LOG }o--|| REQUEST : may_reference
+    QUERY_EXECUTION_LOG }o--|| MATCH_CANDIDATE : may_reference
+    QUERY_EXECUTION_LOG }o--|| BLOOD_INVENTORY : may_reference
+
+    HOSPITAL {
+      int hospital_id PK
+      string name
+      string location
+      string contact
+    }
+
+    PATIENT {
+      int patient_id PK
+      int hospital_id FK
+      string full_name
+      int age
+      string gender
+      string blood_group
+      string contact_info
+      decimal risk_score
+      datetime created_at
+    }
+
+    MEDICAL_RECORD {
+      int record_id PK
+      int patient_id FK
+      string diagnosis
+      string severity_level
+      string stage
+      decimal hemoglobin_level
+      datetime updated_at
+    }
+
+    DONOR {
+      int donor_id PK
+      int hospital_id FK
+      string full_name
+      int age
+      string blood_group
+      string donor_type
+      string contact_info
+      string availability_status
+      datetime last_donation_date
+    }
+
+    DONOR_ELIGIBILITY {
+      int eligibility_id PK
+      int donor_id FK
+      string donation_mode
+      string eligibility_status
+      string reason
+      datetime evaluated_at
+    }
+
+    REQUEST {
+      int request_id PK
+      int patient_id FK
+      int hospital_id FK
+      string request_type
+      int urgency_level
+      decimal priority_score
+      string status
+      datetime request_date
+    }
+
+    BLOOD_REQUEST_DETAILS {
+      int request_id PK,FK
+      string blood_group_required
+      int units_required
+      datetime required_by
+    }
+
+    ORGAN_REQUEST_DETAILS {
+      int request_id PK,FK
+      string organ_type_required
+      decimal max_wait_time_days
+      string hla_notes
+    }
+
+    BLOOD_DONATION {
+      int blood_donation_id PK
+      int donor_id FK
+      datetime donation_date
+      int quantity_donated_ml
+      string outcome
+    }
+
+    BLOOD_UNIT {
+      int blood_unit_id PK
+      int blood_donation_id FK
+      string blood_group
+      int units
+      date expiry_date
+      string unit_status
+    }
+
+    BLOOD_INVENTORY {
+      int inventory_id PK
+      int hospital_id FK
+      string blood_group
+      int current_units
+      datetime last_updated
+    }
+
+    ORGAN_OFFER {
+      int organ_offer_id PK
+      int donor_id FK
+      string organ_type
+      string availability_status
+      datetime retrieval_date
+      string medical_clearance
+    }
+
+    MATCH_CANDIDATE {
+      int match_id PK
+      int request_id FK
+      int donor_id FK
+      int blood_unit_id FK
+      int organ_offer_id FK
+      decimal compatibility_score
+      decimal risk_adjusted_priority
+      string match_status
+      datetime match_date
+    }
+
+    TRANSPLANT {
+      int transplant_id PK
+      int match_id FK
+      datetime transplant_date
+      string surgeon_name
+      string outcome
+    }
+
+    CHAT_SESSION {
+      int chat_session_id PK
+      int hospital_id FK
+      string user_role
+      datetime started_at
+    }
+
+    CHAT_MESSAGE {
+      int message_id PK
+      int chat_session_id FK
+      string sender_type
+      string message_text
+      datetime created_at
+    }
+
+    INTENT_DETECTION {
+      int intent_id PK
+      int message_id FK
+      string intent_code
+      decimal confidence_score
+      datetime detected_at
+    }
+
+    SQL_TEMPLATE {
+      int template_id PK
+      string intent_code
+      string sql_text
+      string allowed_params
+      boolean active_flag
+    }
+
+    QUERY_EXECUTION_LOG {
+      int execution_id PK
+      int intent_id FK
+      int template_id FK
+      string param_json
+      string execution_status
+      int rows_returned
+      datetime executed_at
+    }
+        </pre>
+      </div>
+    </main>
+
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "default",
+        securityLevel: "loose"
+      });
+
+      const wrap = document.getElementById("diagramWrap");
+      const zoomLabel = document.getElementById("zoomLabel");
+      const zoomInBtn = document.getElementById("zoomIn");
+      const zoomOutBtn = document.getElementById("zoomOut");
+      const resetBtn = document.getElementById("resetZoom");
+
+      let zoom = 1;
+      const minZoom = 0.5;
+      const maxZoom = 2;
+      const step = 0.1;
+
+      function applyZoom() {
+        wrap.style.transform = `scale(${zoom.toFixed(2)})`;
+        zoomLabel.textContent = `Zoom: ${Math.round(zoom * 100)}%`;
+      }
+
+      zoomInBtn.addEventListener("click", () => {
+        zoom = Math.min(maxZoom, zoom + step);
+        applyZoom();
+      });
+
+      zoomOutBtn.addEventListener("click", () => {
+        zoom = Math.max(minZoom, zoom - step);
+        applyZoom();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        zoom = 1;
+        applyZoom();
+      });
+
+      window.addEventListener(
+        "wheel",
+        (event) => {
+          if (!event.ctrlKey) return;
+          event.preventDefault();
+          if (event.deltaY < 0) {
+            zoom = Math.min(maxZoom, zoom + step);
+          } else {
+            zoom = Math.max(minZoom, zoom - step);
+          }
+          applyZoom();
+        },
+        { passive: false }
+      );
+    </script>
+  </body>
+</html>
