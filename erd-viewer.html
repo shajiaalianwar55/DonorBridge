@@ -114,7 +114,6 @@ erDiagram
     PATIENT ||--o{ REQUEST : needs
     PATIENT ||--o{ MEDICAL_RECORD : has
 
-    DONOR ||--o{ DONOR_ELIGIBILITY : evaluated_by
     DONOR ||--o{ BLOOD_DONATION : makes
     DONOR ||--o{ ORGAN_OFFER : provides
 
@@ -176,15 +175,6 @@ erDiagram
       string contact_info
       string availability_status
       datetime last_donation_date
-    }
-
-    DONOR_ELIGIBILITY {
-      int eligibility_id PK
-      int donor_id FK
-      string donation_mode
-      string eligibility_status
-      string reason
-      datetime evaluated_at
     }
 
     REQUEST {
