@@ -3,13 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DonorBridge ERD Viewer</title>
+    <title>ERD</title>
     <style>
       :root {
         --bg: #0b1020;
         --panel: #121a33;
         --text: #e8ecf7;
-        --muted: #9fb0d6;
         --accent: #60a5fa;
       }
 
@@ -39,12 +38,6 @@
         font-weight: 700;
       }
 
-      .subtitle {
-        margin: 4px 0 0;
-        font-size: 13px;
-        color: var(--muted);
-      }
-
       .controls {
         display: flex;
         gap: 8px;
@@ -66,7 +59,7 @@
       }
 
       .viewer {
-        height: calc(100vh - 116px);
+        height: calc(100vh - 88px);
         overflow: auto;
         padding: 16px;
       }
@@ -89,11 +82,7 @@
   </head>
   <body>
     <header class="header">
-      <h1 class="title">DonorBridge Integrated ERD</h1>
-      <p class="subtitle">
-        Use zoom buttons (or Ctrl + mouse wheel) and scroll/pan to inspect every
-        entity.
-      </p>
+      <h1 class="title">ERD</h1>
       <div class="controls">
         <button id="zoomOut">- Zoom Out</button>
         <button id="zoomIn">+ Zoom In</button>
@@ -108,10 +97,10 @@
 erDiagram
     HOSPITAL ||--o{ PATIENT : treats
     HOSPITAL ||--o{ DONOR : registers
-    HOSPITAL ||--o{ REQUEST : creates
+    HOSPITAL ||--o{ REQUEST : hosts
     HOSPITAL ||--o{ BLOOD_INVENTORY : stores
 
-    PATIENT ||--o{ REQUEST : needs
+    PATIENT ||--o{ REQUEST : creates
     PATIENT ||--o{ MEDICAL_RECORD : has
 
     DONOR ||--o{ BLOOD_DONATION : makes
@@ -119,13 +108,12 @@ erDiagram
 
     REQUEST ||--|| BLOOD_REQUEST_DETAILS : has
     REQUEST ||--|| ORGAN_REQUEST_DETAILS : has
-    REQUEST ||--o{ MATCH_CANDIDATE : receives
+    REQUEST ||--o{ MATCH_CANDIDATE : generates
 
     BLOOD_DONATION ||--o{ BLOOD_UNIT : produces
-    BLOOD_UNIT }o--|| BLOOD_INVENTORY : tracked_in
-    BLOOD_UNIT ||--o{ MATCH_CANDIDATE : candidate_for
+    BLOOD_UNIT ||--o{ MATCH_CANDIDATE : unit_match_candidate
 
-    ORGAN_OFFER ||--o{ MATCH_CANDIDATE : candidate_for
+    ORGAN_OFFER ||--o{ MATCH_CANDIDATE : organ_match_candidate
     MATCH_CANDIDATE ||--o| TRANSPLANT : may_result_in
 
     CHAT_SESSION ||--o{ CHAT_MESSAGE : contains
@@ -184,7 +172,6 @@ erDiagram
       int hospital_id FK
       string request_type
       int urgency_level
-      decimal priority_score
       string status
       datetime request_date
     }
@@ -215,7 +202,7 @@ erDiagram
       int blood_unit_id PK
       int blood_donation_id FK
       string blood_group
-      int units
+      int volume_ml
       date expiry_date
       string unit_status
     }
@@ -224,7 +211,7 @@ erDiagram
       int inventory_id PK
       int hospital_id FK
       string blood_group
-      int current_units
+      int available_units_summary
       datetime last_updated
     }
 
@@ -240,11 +227,11 @@ erDiagram
     MATCH_CANDIDATE {
       int match_id PK
       int request_id FK
-      int donor_id FK
+      string match_type
       int blood_unit_id FK
       int organ_offer_id FK
       decimal compatibility_score
-      decimal risk_adjusted_priority
+      string priority_level
       string match_status
       datetime match_date
     }
