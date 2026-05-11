@@ -67,7 +67,7 @@ DonorBridge schema.
 | 1  | Blood inventory by type — *"What is the inventory for O- blood?"*   | "Only 2 units of O- at City General Hospital. URGENT: Stock is critically low." |
 | 2  | Blood inventory by family — *"Is there any O blood?"*               | Lists O+ and O- with critical/low/sufficient tags.                          |
 | 3  | Whole-hospital stock — *"Any low stock?"*, *"Show inventory"*       | Lists every blood group at the hospital with tags.                          |
-| 4  | High-risk patients — *"Who are the high-risk patients?"*            | Patients with `risk_score > 7`, tagged High Priority / Critical / Urgent.   |
+| 4  | High-risk patients — *"Who are the high-risk patients?"*            | Patients with `risk_score > 70`, tagged High Priority / Critical / Urgent.  |
 | 5  | All patients — *"List all patients."*                               | Roster sorted by risk.                                                      |
 | 6  | Transplant priority — *"Who should get the next kidney transplant?"*| Patients ordered by urgency + max wait, with the recommended next recipient.|
 | 7  | Transplant history — *"Show me the transplant history."*            | Past transplants with surgeon and outcome.                                  |

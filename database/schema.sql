@@ -36,7 +36,7 @@ CREATE TABLE patient (
     gender TEXT NOT NULL,
     blood_group TEXT NOT NULL,
     contact_info TEXT NOT NULL,
-    risk_score NUMERIC(5, 2) NOT NULL,
+    risk_score NUMERIC(5, 2) NOT NULL CHECK (risk_score >= 0 AND risk_score <= 100),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

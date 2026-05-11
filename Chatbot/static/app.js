@@ -9,6 +9,9 @@
   };
 
   const el = {
+    landingScreen: document.getElementById("landing-screen"),
+    enterAppBtn:   document.getElementById("enter-app-btn"),
+    appShell:      document.getElementById("app-shell"),
     hospitalSelect: document.getElementById("hospital-select"),
     roleSelect:     document.getElementById("role-select"),
     newSessionBtn:  document.getElementById("new-session-btn"),
@@ -28,6 +31,19 @@
     sessionId: null,
     busy: false,
   };
+
+  function openApp() {
+    document.body.classList.remove("landing-active");
+    document.body.classList.add("app-ready");
+    if (el.appShell) el.appShell.setAttribute("aria-hidden", "false");
+    if (!el.landingScreen) return;
+
+    el.landingScreen.classList.add("landing-exiting");
+    window.setTimeout(() => {
+      el.landingScreen.remove();
+      el.composerInput.focus();
+    }, 650);
+  }
 
   // ---------------- networking ----------------
   async function jsonFetch(url, options = {}) {
@@ -237,6 +253,10 @@
     clearMessages();
     await ensureSession();
   });
+
+  if (el.enterAppBtn) {
+    el.enterAppBtn.addEventListener("click", openApp);
+  }
 
   bootstrap();
 })();

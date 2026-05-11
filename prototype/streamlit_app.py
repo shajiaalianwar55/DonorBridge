@@ -61,6 +61,103 @@ html {
 [data-testid="stHeadingWithActionElements"] h1 {
     font-size: 1.85rem !important;
 }
+
+/* DonorBridge command-centre theme */
+.stApp {
+    background:
+        radial-gradient(circle at 18% 8%, rgba(45, 212, 191, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(56, 189, 248, 0.14), transparent 30%),
+        linear-gradient(135deg, #eefdfa 0%, #f1f5f9 42%, #e8f4fb 100%) !important;
+}
+.main .block-container {
+    max-width: 1180px;
+    padding-top: 2rem;
+}
+[data-testid="stSidebar"] {
+    background:
+        radial-gradient(circle at 10% 10%, rgba(94, 234, 212, 0.2), transparent 28%),
+        linear-gradient(180deg, #062925 0%, #073b36 52%, #0f172a 100%) !important;
+}
+[data-testid="stSidebarContent"] {
+    color: rgba(255, 255, 255, 0.84) !important;
+}
+[data-testid="stSidebarContent"] h1,
+[data-testid="stSidebarContent"] h2,
+[data-testid="stSidebarContent"] h3,
+[data-testid="stSidebarContent"] p,
+[data-testid="stSidebarContent"] span,
+[data-testid="stSidebarContent"] label {
+    color: rgba(255, 255, 255, 0.86) !important;
+}
+[data-testid="stSidebarContent"] code {
+    color: #99f6e4 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+[data-testid="stSidebarContent"] div[data-testid="stAlert"] {
+    border-color: rgba(94, 234, 212, 0.32) !important;
+    background: rgba(16, 185, 129, 0.16) !important;
+}
+[data-testid="stSidebarContent"] .stButton button,
+[data-testid="stSidebarContent"] .stButton button *,
+[data-testid="stSidebarContent"] div[data-testid="stButton"] button,
+[data-testid="stSidebarContent"] div[data-testid="stButton"] button * {
+    color: #063b35 !important;
+}
+.app-hero {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.35rem;
+    padding: 1.5rem 1.7rem;
+    border: 1px solid rgba(13, 148, 136, 0.2);
+    border-radius: 28px;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(94, 234, 212, 0.36), transparent 30%),
+        radial-gradient(circle at 92% 8%, rgba(56, 189, 248, 0.25), transparent 32%),
+        linear-gradient(135deg, #062925 0%, #073b36 48%, #0f172a 100%);
+    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.2);
+}
+.app-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: 44px 44px;
+}
+.app-hero > * {
+    position: relative;
+    z-index: 1;
+}
+.app-hero h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 2.1rem;
+    letter-spacing: -0.05em;
+}
+.app-hero p {
+    max-width: 760px;
+    margin: 0.45rem 0 0;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.55;
+}
+.app-hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1rem;
+}
+.app-hero-pills span {
+    padding: 0.4rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.84);
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
 [data-testid="stTabs"] [role="tab"] {
     font-size: 1.12rem !important;
     padding-top: 0.45rem !important;
@@ -83,17 +180,100 @@ html {
 }
 
 /* Care Clarity — tabs & expanders (teal accent) */
+[data-testid="stTabs"] [role="tablist"] {
+    gap: 0.25rem;
+    padding: 0.35rem;
+    border: 1px solid rgba(13, 148, 136, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+[data-testid="stTabs"] [role="tab"] {
+    border-radius: 999px;
+    color: #0f172a !important;
+}
 [data-testid="stTabs"] [role="tab"][aria-selected="true"] {
-    color: #0d9488 !important;
-    border-bottom-color: #0d9488 !important;
+    color: #ffffff !important;
+    border-bottom-color: transparent !important;
+    background: linear-gradient(135deg, #0d9488, #0284c7) !important;
+    box-shadow: 0 12px 28px rgba(13, 148, 136, 0.24);
 }
 [data-testid="stExpander"] details {
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 12px !important;
-    background: #ffffff !important;
+    overflow: hidden;
+    border: 1px solid rgba(13, 148, 136, 0.18) !important;
+    border-radius: 18px !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.96)) !important;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07) !important;
 }
 [data-testid="stExpander"] summary {
     color: #0f172a !important;
+    background: linear-gradient(90deg, rgba(13, 148, 136, 0.1), rgba(56, 189, 248, 0.08));
+    border-radius: 16px !important;
+    font-weight: 800 !important;
+}
+[data-testid="stDataFrame"] {
+    border: 1px solid rgba(13, 148, 136, 0.16);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+[data-testid="stAlert"] {
+    border-radius: 16px !important;
+}
+.stButton button {
+    border: 1px solid rgba(13, 148, 136, 0.28) !important;
+    border-radius: 999px !important;
+    color: #0f766e !important;
+    background: linear-gradient(135deg, #ffffff, #ecfeff) !important;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07) !important;
+    font-weight: 800 !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.stButton button:hover {
+    border-color: #0d9488 !important;
+    color: #063b35 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 34px rgba(13, 148, 136, 0.18) !important;
+}
+.risk-legend {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.7rem;
+    margin: 0.85rem 0 1rem;
+}
+.risk-chip {
+    padding: 0.75rem 0.85rem;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+.risk-chip strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: #0f172a;
+}
+.risk-chip span {
+    color: #334155;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+.risk-low {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+}
+.risk-moderate {
+    background: linear-gradient(135deg, #fef9c3, #fde68a);
+}
+.risk-high {
+    background: linear-gradient(135deg, #ffedd5, #fed7aa);
+}
+.risk-critical {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+}
+@media (max-width: 760px) {
+    .risk-legend {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 /* Form widgets — visible outlines on light backgrounds */
@@ -172,9 +352,309 @@ html {
     background: #0f766e !important;
 }
 
+/* DonorBridge landing screen */
+.donorbridge-landing {
+    position: relative;
+    min-height: auto;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+    gap: 1.6rem 2.4rem;
+    align-items: start;
+    padding: clamp(1.6rem, 4vw, 3rem);
+    border-radius: 34px;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 18% 18%, rgba(45, 212, 191, 0.34), transparent 28%),
+        radial-gradient(circle at 85% 12%, rgba(56, 189, 248, 0.26), transparent 30%),
+        linear-gradient(135deg, #062925 0%, #073b36 42%, #0f172a 100%);
+    box-shadow: 0 36px 100px rgba(15, 23, 42, 0.28);
+}
+.donorbridge-landing::before {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 26px;
+    pointer-events: none;
+}
+.donorbridge-landing::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.22;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 58px 58px;
+    mask-image: radial-gradient(circle at center, #000 0%, transparent 72%);
+}
+.landing-copy,
+.landing-preview {
+    position: relative;
+    z-index: 1;
+}
+.landing-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.85rem;
+}
+.landing-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 1.2rem;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.landing-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #5eead4;
+    box-shadow: 0 0 20px rgba(94, 234, 212, 0.9);
+}
+.landing-copy h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(3rem, 7vw, 6.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.08em;
+}
+.landing-copy p {
+    max-width: 620px;
+    margin: 1rem 0 0;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: clamp(1rem, 2vw, 1.25rem) !important;
+    line-height: 1.6;
+}
+.landing-preview-card {
+    width: min(390px, 100%);
+    margin-left: auto;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.26);
+    backdrop-filter: blur(22px);
+}
+.landing-preview-title {
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.landing-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+.landing-stat {
+    padding: 1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.12);
+}
+.landing-stat strong {
+    display: block;
+    color: #ffffff;
+    font-size: 2rem;
+    line-height: 1;
+}
+.landing-stat span {
+    display: block;
+    margin-top: 0.45rem;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 0.75rem;
+}
+.landing-bar {
+    height: 0.75rem;
+    margin-top: 0.62rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+}
+.landing-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #5eead4, #38bdf8);
+}
+.landing-feature-grid {
+    position: relative;
+    z-index: 1;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 0;
+}
+.landing-feature-card {
+    min-height: 116px;
+    padding: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(18px);
+}
+.landing-feature-card strong {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+.landing-feature-card span {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+.landing-cta div[data-testid="stButton"] button {
+    min-height: 3.2rem;
+    padding: 0 1.5rem !important;
+    border: none !important;
+    border-radius: 999px !important;
+    color: #063b35 !important;
+    background: linear-gradient(135deg, #ffffff, #99f6e4) !important;
+    box-shadow: 0 22px 55px rgba(20, 184, 166, 0.32) !important;
+    font-weight: 900 !important;
+}
+.landing-cta div[data-testid="stButton"] button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 28px 65px rgba(20, 184, 166, 0.42) !important;
+}
+@media (max-width: 900px) {
+    .donorbridge-landing {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+    }
+    .landing-preview-card {
+        margin-left: 0;
+    }
+    .landing-feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 620px) {
+    .landing-feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 """
 st.markdown(_LARGER_TYPE, unsafe_allow_html=True)
+
+
+def landing_page():
+    if st.session_state.get("entered_donorbridge", False):
+        return
+
+    st.markdown(
+        """
+        <div class="donorbridge-landing">
+            <div class="landing-copy">
+                <div class="landing-eyebrow">
+                    <span class="landing-dot"></span>
+                    Healthcare resource intelligence
+                </div>
+                <h1>DonorBridge</h1>
+                <p>
+                    A smarter command center for blood inventory, donors,
+                    transplant requests, and hospital risk signals.
+                </p>
+            </div>
+            <div class="landing-preview">
+                <div class="landing-preview-card">
+                    <div class="landing-preview-title">App capabilities</div>
+                    <div class="landing-stats">
+                        <div class="landing-stat">
+                            <strong>Reports</strong>
+                            <span>Live database views</span>
+                        </div>
+                        <div class="landing-stat">
+                            <strong>Q&A</strong>
+                            <span>Guided assistant</span>
+                        </div>
+                    </div>
+                    <div class="landing-bar"><span style="width: 82%"></span></div>
+                    <div class="landing-bar"><span style="width: 64%"></span></div>
+                    <div class="landing-bar"><span style="width: 46%"></span></div>
+                </div>
+            </div>
+            <div class="landing-feature-grid">
+                <div class="landing-feature-card">
+                    <strong>Operational reports</strong>
+                    <span>
+                        Review request load, blood availability, supply gaps,
+                        organ offers, and transplant progress from one centre.
+                    </span>
+                </div>
+                <div class="landing-feature-card">
+                    <strong>Hospital coordination</strong>
+                    <span>
+                        Manage hospital records and keep each site aligned with
+                        current resource and contact information.
+                    </span>
+                </div>
+                <div class="landing-feature-card">
+                    <strong>Patient oversight</strong>
+                    <span>
+                        Track patient records, risk scores, blood groups, and
+                        hospital assignment for faster follow-up.
+                    </span>
+                </div>
+                <div class="landing-feature-card">
+                    <strong>Assistant support</strong>
+                    <span>
+                        Ask natural-language questions about donors, inventory,
+                        requests, matches, and audit-backed insights.
+                    </span>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown('<div class="landing-cta">', unsafe_allow_html=True)
+    if st.button("Open DonorBridge", type="primary"):
+        st.session_state.entered_donorbridge = True
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.stop()
+
+
+landing_page()
+
+st.markdown(
+    """
+    <div class="app-hero">
+        <h1>DonorBridge Command Centre</h1>
+        <p>
+            Monitor healthcare resource flows, manage hospital and patient
+            records, and ask the assistant database-backed operational questions.
+        </p>
+        <div class="app-hero-pills">
+            <span>Reports</span>
+            <span>Hospitals</span>
+            <span>Patients</span>
+            <span>Assistant</span>
+            <span>Audit-ready insights</span>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 REPORT_VIEWS = (
     ("Open requests by hospital", "SELECT * FROM report_open_requests_by_hospital"),
@@ -185,8 +665,88 @@ REPORT_VIEWS = (
     ("Assistant audit trail", "SELECT * FROM report_assistant_audit_trail"),
 )
 
+SAMPLE_QUESTIONS = (
+    "What is the inventory for O- blood?",
+    "Is there any O blood group available?",
+    "Is there any shortage or low stock?",
+    "Who are the high-risk patients?",
+    "List all patients.",
+    "Who should get the next kidney transplant?",
+    "Show me the eligible donors.",
+    "Show me recent blood donations.",
+    "List the pending requests.",
+    "Show me the match candidates.",
+    "Which blood units are expiring soon?",
+    "Show me the transplant history.",
+    "List all hospitals.",
+    "Why is Hospital 1 at risk?",
+)
+
+RISK_BANDS = (
+    ("Low", 0, 49.99, "#dcfce7"),
+    ("Moderate", 50, 69.99, "#fef9c3"),
+    ("High", 70, 84.99, "#ffedd5"),
+    ("Critical", 85, 100, "#fee2e2"),
+)
+
+
+def risk_category(score):
+    value = float(score or 0)
+    if value >= 85:
+        return "Critical"
+    if value >= 70:
+        return "High"
+    if value >= 50:
+        return "Moderate"
+    return "Low"
+
+
+def risk_row_style(row):
+    colors = {
+        "Low": "background-color: rgba(34, 197, 94, 0.14)",
+        "Moderate": "background-color: rgba(234, 179, 8, 0.18)",
+        "High": "background-color: rgba(249, 115, 22, 0.18)",
+        "Critical": "background-color: rgba(239, 68, 68, 0.18)",
+    }
+    return [colors.get(row.get("risk_category"), "") for _ in row]
+
+
+def patient_dataframe(rows):
+    df = pd.DataFrame(rows)
+    if df.empty or "risk_score" not in df:
+        return df
+    df["risk_category"] = df["risk_score"].apply(risk_category)
+    return df.style.apply(risk_row_style, axis=1).format({"risk_score": "{:.2f}"})
+
+
+def render_risk_legend():
+    st.markdown(
+        """
+        <div class="risk-legend">
+            <div class="risk-chip risk-low">
+                <strong>Low</strong><span>0-49.99</span>
+            </div>
+            <div class="risk-chip risk-moderate">
+                <strong>Moderate</strong><span>50-69.99</span>
+            </div>
+            <div class="risk-chip risk-high">
+                <strong>High</strong><span>70-84.99</span>
+            </div>
+            <div class="risk-chip risk-critical">
+                <strong>Critical</strong><span>85-100</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 
 def sidebar_connection():
+    if st.sidebar.button("Show opening page"):
+        st.session_state.entered_donorbridge = False
+        st.rerun()
+
+    st.sidebar.divider()
     st.sidebar.header("Database")
     st.sidebar.markdown(
         "Set **`DATABASE_URL`** before launch (see [README.md](README.md))."
@@ -320,6 +880,8 @@ with tab_hospitals:
 
 with tab_patients:
     st.subheader("Patients — retrieval, add, update, delete")
+    st.caption("Patient risk scores use a 0-100 scale.")
+    render_risk_legend()
 
     try:
         patients = db.fetch_all(
@@ -332,7 +894,7 @@ with tab_patients:
             ORDER BY p.patient_id
             """
         )
-        st.dataframe(pd.DataFrame(patients), use_container_width=True)
+        st.dataframe(patient_dataframe(patients), use_container_width=True)
         hosp_opts = db.fetch_all(
             "SELECT hospital_id, name FROM hospital ORDER BY hospital_id"
         )
@@ -363,7 +925,12 @@ with tab_patients:
             )
             contact_info = st.text_input("Contact info", key="p_add_ci")
             risk_score = st.number_input(
-                "Risk score", min_value=0.0, max_value=999.99, value=55.55, key="p_add_rs"
+                "Risk score (0-100)",
+                min_value=0.0,
+                max_value=100.0,
+                value=55.55,
+                step=0.01,
+                key="p_add_rs",
             )
             if st.button("Insert patient", key="p_add_btn"):
                 try:
@@ -441,10 +1008,11 @@ with tab_patients:
                 key="p_upd_ci",
             )
             rs = st.number_input(
-                "Risk score",
+                "Risk score (0-100)",
                 min_value=0.0,
-                max_value=999.99,
-                value=float(cur.get("risk_score", 0)),
+                max_value=100.0,
+                value=min(max(float(cur.get("risk_score", 0)), 0.0), 100.0),
+                step=0.01,
                 key="p_upd_rs",
             )
             if st.button("Save patient", key="p_upd_btn"):
@@ -566,14 +1134,25 @@ with tab_assistant:
             f"hospital #{assistant_hospital_id} context."
         )
 
-    st.markdown("**Try:** blood inventory, pending requests, high-risk patients.")
+    sample_prompt = None
+    with st.expander("Sample questions you can ask", expanded=True):
+        st.caption("Click a question to send it to the assistant.")
+        sample_cols = st.columns(2)
+        for idx, question in enumerate(SAMPLE_QUESTIONS):
+            if sample_cols[idx % 2].button(
+                question,
+                key=f"sample_question_{idx}",
+                use_container_width=True,
+            ):
+                sample_prompt = question
 
     for msg in st.session_state.assistant_messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
     chat_prompt = st.chat_input("Ask about donors, inventory, requests…")
-    if chat_prompt:
+    prompt = sample_prompt or chat_prompt
+    if prompt:
         if st.session_state.assistant_session_id is None:
             st.session_state.assistant_session_id = chatbot_backend.start_chat_session(
                 conn_asst,
@@ -581,11 +1160,11 @@ with tab_assistant:
                 assistant_role,
             )
         st.session_state.assistant_messages.append(
-            {"role": "user", "content": chat_prompt}
+            {"role": "user", "content": prompt}
         )
         reply = chatbot_backend.process_user_query(
             conn_asst,
-            chat_prompt,
+            prompt,
             assistant_hospital_id or chatbot_backend.DEFAULT_HOSPITAL_ID,
             st.session_state.assistant_session_id,
         )

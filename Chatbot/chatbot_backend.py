@@ -38,8 +38,8 @@ DB_PATH = "donorbridge.db"
 URGENT_STOCK_THRESHOLD = 5
 LOW_STOCK_THRESHOLD = 10
 
-RISK_THRESHOLD = 7
-HIGH_PRIORITY_RISK = 8
+RISK_THRESHOLD = 70
+HIGH_PRIORITY_RISK = 85
 HB_CRITICAL = 7.0
 HB_URGENT = 10.0
 
@@ -504,7 +504,7 @@ def _format_high_risk_patients(rows: Sequence[Tuple[Any, ...]]) -> str:
     parts = []
     for name, diagnosis, hb, score, severity in rows:
         tags = []
-        if float(score) > HIGH_PRIORITY_RISK:
+        if float(score) >= HIGH_PRIORITY_RISK:
             tags.append("High Priority")
         tags.append(_categorize_hemoglobin(hb))
         if severity:
@@ -513,7 +513,7 @@ def _format_high_risk_patients(rows: Sequence[Tuple[Any, ...]]) -> str:
         hb_str = f"Hb {hb} g/dL" if hb is not None else "Hb unknown"
         diag = diagnosis or "no diagnosis on file"
         parts.append(
-            f"{name} [{tag_str}] - {diag}, {hb_str}, risk {float(score):.1f}/10"
+            f"{name} [{tag_str}] - {diag}, {hb_str}, risk {float(score):.1f}/100"
         )
     return (
         "Based on our data, the following patients are at high risk: "
@@ -582,7 +582,7 @@ def _format_list_hospitals(rows: Sequence[Tuple[Any, ...]]) -> str:
 
 def _format_list_patients(rows: Sequence[Tuple[Any, ...]]) -> str:
     parts = [
-        f"{name} ({age} {gender}, {bg}, risk {float(score):.1f}/10)"
+        f"{name} ({age} {gender}, {bg}, risk {float(score):.1f}/100)"
         for name, age, gender, bg, score in rows
     ]
     return "Patients at this hospital: " + "; ".join(parts) + "."

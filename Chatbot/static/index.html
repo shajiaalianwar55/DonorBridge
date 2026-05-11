@@ -12,8 +12,71 @@
   />
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
-<body>
-  <div class="app">
+<body class="landing-active">
+  <section class="landing-screen" id="landing-screen" aria-label="DonorBridge welcome">
+    <div class="landing-orb landing-orb-one"></div>
+    <div class="landing-orb landing-orb-two"></div>
+    <div class="landing-grid"></div>
+
+    <div class="landing-shell">
+      <div class="landing-copy">
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          Healthcare resource intelligence
+        </div>
+        <h1>DonorBridge</h1>
+        <p>
+          A smarter command center for blood inventory, donors, transplant
+          requests, and hospital risk signals.
+        </p>
+        <button class="enter-button" id="enter-app-btn" type="button">
+          Open DonorBridge
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="landing-preview" aria-hidden="true">
+        <div class="preview-card preview-main">
+          <div class="preview-topline">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="preview-title">App capabilities</div>
+          <div class="preview-stat-row">
+            <div>
+              <strong>Reports</strong>
+              <span>Live database views</span>
+            </div>
+            <div>
+              <strong>Q&A</strong>
+              <span>Guided assistant</span>
+            </div>
+          </div>
+          <div class="preview-bars">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <div class="preview-card preview-chat">
+          <span class="preview-bot">DB</span>
+          <p>Open the app to view live database reports and assistant answers.</p>
+        </div>
+        <div class="preview-card preview-pulse">
+          <span></span>
+          Live donor and blood bank signals
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="app" id="app-shell" aria-hidden="true">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="brand">

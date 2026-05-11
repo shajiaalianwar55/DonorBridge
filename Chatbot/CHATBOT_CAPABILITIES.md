@@ -65,7 +65,7 @@ Sample reply
 
 ## 3. High-risk patients
 
-Lists patients with `risk_score > 7`, joined with their medical record
+Lists patients with `risk_score > 70`, joined with their medical record
 (diagnosis, hemoglobin, severity).
 
 Examples:
@@ -77,7 +77,7 @@ Examples:
 - "High-risk priority patients?"
 
 Tags applied:
-- `risk_score > 8` → **High Priority**
+- `risk_score >= 85` → **High Priority**
 - Hemoglobin: `< 7` → **Critical**, `7 – 10` → **Urgent**, `> 10` → **Moderate**
 
 ---

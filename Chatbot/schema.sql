@@ -46,7 +46,7 @@ CREATE TABLE PATIENT (
     gender        TEXT    NOT NULL CHECK (gender IN ('M','F','O')),
     blood_group   TEXT    NOT NULL,
     contact_info  TEXT,
-    risk_score    REAL    NOT NULL DEFAULT 0 CHECK (risk_score BETWEEN 0 AND 10),
+    risk_score    REAL    NOT NULL DEFAULT 0 CHECK (risk_score BETWEEN 0 AND 100),
     created_at    TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (hospital_id) REFERENCES HOSPITAL(hospital_id)
 );
@@ -245,13 +245,13 @@ INSERT INTO HOSPITAL (hospital_id, name, location, contact) VALUES
     (3, 'Sunrise Care Center',    'Bengaluru', '+91-80-3333-3333');
 
 INSERT INTO PATIENT (patient_id, hospital_id, full_name, age, gender, blood_group, contact_info, risk_score) VALUES
-    (1, 1, 'Asha Patel',     34, 'F', 'O-',  'asha@example.com',   9.0),
-    (2, 1, 'Rohit Sharma',   52, 'M', 'A+',  'rohit@example.com',  6.0),
-    (3, 1, 'Meera Iyer',     45, 'F', 'B+',  'meera@example.com',  9.5),
-    (4, 1, 'Sanjay Gupta',   60, 'M', 'AB+', 'sanjay@example.com', 8.0),
-    (5, 2, 'Priya Nair',     12, 'F', 'O+',  'priya@example.com',  10.0),
-    (6, 2, 'Arjun Verma',    29, 'M', 'B-',  'arjun@example.com',  4.0),
-    (7, 3, 'Kavya Reddy',    38, 'F', 'A-',  'kavya@example.com',  7.5);
+    (1, 1, 'Asha Patel',     34, 'F', 'O-',  'asha@example.com',   90.0),
+    (2, 1, 'Rohit Sharma',   52, 'M', 'A+',  'rohit@example.com',  60.0),
+    (3, 1, 'Meera Iyer',     45, 'F', 'B+',  'meera@example.com',  95.0),
+    (4, 1, 'Sanjay Gupta',   60, 'M', 'AB+', 'sanjay@example.com', 80.0),
+    (5, 2, 'Priya Nair',     12, 'F', 'O+',  'priya@example.com',  100.0),
+    (6, 2, 'Arjun Verma',    29, 'M', 'B-',  'arjun@example.com',  40.0),
+    (7, 3, 'Kavya Reddy',    38, 'F', 'A-',  'kavya@example.com',  75.0);
 
 INSERT INTO MEDICAL_RECORD (patient_id, diagnosis, severity_level, stage, hemoglobin_level) VALUES
     (1, 'Severe Anemia',           'Severe',   'II',   7.5),
