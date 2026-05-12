@@ -11,15 +11,19 @@ CREATE OR REPLACE VIEW report_open_requests_by_hospital AS
 SELECT
     h.hospital_id,
     h.name AS hospital_name,
-    r.request_type,
+    -- request_type lives on `request`, not `hospital`; LEFT JOIN yields NULL until this hospital has rows there.
+    COALESCE(r.request_type, '(no requests yet)') AS request_type,
     COUNT(*) FILTER (WHERE r.status ILIKE '%OPEN%') AS open_count,
-    MAX(r.urgency_level) FILTER (WHERE r.status ILIKE '%OPEN%') AS max_open_urgency
+    COALESCE(
+        MAX(r.urgency_level) FILTER (WHERE r.status ILIKE '%OPEN%'),
+        0
+    ) AS max_open_urgency
 FROM hospital h
 LEFT JOIN request r ON r.hospital_id = h.hospital_id
 GROUP BY h.hospital_id, h.name, r.request_type
 ORDER BY h.name, r.request_type;
 
-COMMENT ON VIEW report_open_requests_by_hospital IS 'OPEN-style requests by hospital and modality (blood vs organ).';
+COMMENT ON VIEW report_open_requests_by_hospital IS 'OPEN-style requests by hospital and modality (blood vs organ). Hospitals with no requests show (no requests yet) for request_type.';
 
 CREATE OR REPLACE VIEW report_available_blood_units_by_site AS
 SELECT

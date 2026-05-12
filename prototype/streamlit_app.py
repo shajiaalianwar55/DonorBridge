@@ -1,5 +1,5 @@
 """
-DonorBridge prototype — reports, Hospitals / Patients CRUD, and Assistant (chatbot).
+DonorBridge prototype — reports, Hospitals / Patients / Requests CRUD, and Assistant (chatbot).
 Run from this directory: streamlit run streamlit_app.py
 """
 
@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 import sys
+from datetime import date, datetime, time
 
 import streamlit as st
 import pandas as pd
@@ -27,6 +28,41 @@ except ImportError:
 
 
 st.set_page_config(page_title="DonorBridge prototype", layout="wide")
+
+_CRUD_NOTIFY_KEY = "_donorbridge_crud_notify"
+
+
+def _crud_queue_message(message: str, level: str = "success") -> None:
+    """Persist feedback across ``st.rerun()`` so users actually see it."""
+    st.session_state[_CRUD_NOTIFY_KEY] = {"message": message, "level": level}
+
+
+def _render_crud_notification() -> None:
+    payload = st.session_state.pop(_CRUD_NOTIFY_KEY, None)
+    if not payload:
+        return
+    msg = payload["message"]
+    level = payload.get("level", "success")
+    if level == "success":
+        st.success(msg)
+    elif level == "info":
+        st.info(msg)
+    elif level == "warning":
+        st.warning(msg)
+    else:
+        st.success(msg)
+    toast = getattr(st, "toast", None)
+    if callable(toast):
+        try:
+            icon = "✅" if level == "success" else "ℹ️"
+            toast(msg, icon=icon)
+        except TypeError:
+            try:
+                toast(msg)
+            except Exception:
+                pass
+        except Exception:
+            pass
 
 
 @st.cache_resource
@@ -648,6 +684,7 @@ st.markdown(
             <span>Reports</span>
             <span>Hospitals</span>
             <span>Patients</span>
+            <span>Requests</span>
             <span>Assistant</span>
             <span>Audit-ready insights</span>
         </div>
@@ -761,8 +798,10 @@ def sidebar_connection():
 
 sidebar_connection()
 
-tab_reports, tab_hospitals, tab_patients, tab_assistant = st.tabs(
-    ["Reports", "Hospitals", "Patients", "Assistant"],
+_render_crud_notification()
+
+tab_reports, tab_hospitals, tab_patients, tab_requests, tab_assistant = st.tabs(
+    ["Reports", "Hospitals", "Patients", "Requests", "Assistant"],
 )
 
 with tab_reports:
@@ -778,6 +817,13 @@ with tab_reports:
             st.error(f"**{title}** — `{exc}`")
             continue
         with st.expander(title, expanded=False):
+            if title == "Open requests by hospital":
+                st.caption(
+                    "Blood vs organ appears when that **hospital has request rows** in the "
+                    "database (CRUD covers hospitals, patients, and requests). New "
+                    "hospitals with no linked `request` rows show '(no requests yet)' once "
+                    "you re-run **`database/queries_reports.sql`**."
+                )
             if not rows:
                 st.caption("(no rows)")
             else:
@@ -806,7 +852,7 @@ with tab_hospitals:
                     "INSERT INTO hospital (name, location, contact) VALUES (%s,%s,%s)",
                     (name.strip(), location.strip(), contact.strip()),
                 )
-                st.success("Inserted.")
+                _crud_queue_message("Hospital added successfully.")
                 st.rerun()
             except Exception as exc:
                 st.error(str(exc))
@@ -842,7 +888,7 @@ with tab_hospitals:
                             hid,
                         ),
                     )
-                    st.success("Updated.")
+                    _crud_queue_message("Hospital updated successfully.")
                     st.rerun()
                 except Exception as exc:
                     st.error(str(exc))
@@ -871,9 +917,12 @@ with tab_hospitals:
                             "DELETE FROM hospital WHERE hospital_id=%s",
                             (hid_d,),
                         )
-                        st.success(f"Deleted {n} row(s).") if n else st.info(
-                            "Nothing deleted."
-                        )
+                        if n:
+                            _crud_queue_message(
+                                f"Hospital deleted ({n} row removed)."
+                            )
+                        else:
+                            _crud_queue_message("Nothing was deleted.", level="info")
                         st.rerun()
                     except Exception as exc:
                         st.error(str(exc))
@@ -951,7 +1000,7 @@ with tab_patients:
                             float(risk_score),
                         ),
                     )
-                    st.success("Inserted.")
+                    _crud_queue_message("Patient added successfully.")
                     st.rerun()
                 except Exception as exc:
                     st.error(str(exc))
@@ -1036,7 +1085,7 @@ with tab_patients:
                             pid,
                         ),
                     )
-                    st.success("Updated.")
+                    _crud_queue_message("Patient updated successfully.")
                     st.rerun()
                 except Exception as exc:
                     st.error(str(exc))
@@ -1057,12 +1106,254 @@ with tab_patients:
                         n = db.execute(
                             "DELETE FROM patient WHERE patient_id=%s", (dp,)
                         )
-                        st.success(f"Deleted {n} row(s).") if n else st.info(
-                            "Nothing deleted."
-                        )
+                        if n:
+                            _crud_queue_message(
+                                f"Patient deleted ({n} row removed)."
+                            )
+                        else:
+                            _crud_queue_message("Nothing was deleted.", level="info")
                         st.rerun()
                     except Exception as exc:
                         st.error(str(exc))
+
+
+with tab_requests:
+    st.subheader("Requests — blood & organ")
+    st.caption(
+        "Each request belongs to a **patient** at a **hospital** (`patient.hospital_id` "
+        "must match). Blood rows fill `blood_request_details`; organ rows fill "
+        "`organ_request_details`. **New requests are created as OPEN**; change status "
+        "later under **Update request status**."
+    )
+
+    try:
+        req_rows = db.fetch_all(
+            """
+            SELECT
+                r.request_id,
+                r.patient_id,
+                r.hospital_id,
+                r.request_type,
+                r.urgency_level,
+                r.status,
+                r.request_date,
+                p.full_name AS patient_name,
+                h.name AS hospital_name,
+                br.blood_group_required,
+                br.units_required,
+                br.required_by AS blood_required_by,
+                od.organ_type_required,
+                od.max_wait_time_days,
+                od.hla_notes
+            FROM request r
+            JOIN patient p ON p.patient_id = r.patient_id
+            JOIN hospital h ON h.hospital_id = r.hospital_id
+            LEFT JOIN blood_request_details br ON br.request_id = r.request_id
+            LEFT JOIN organ_request_details od ON od.request_id = r.request_id
+            ORDER BY r.request_id
+            """
+        )
+        patients_for_req = db.fetch_all(
+            """
+            SELECT patient_id, hospital_id, full_name
+            FROM patient
+            ORDER BY patient_id
+            """
+        )
+    except Exception as exc:
+        st.error(str(exc))
+        req_rows = []
+        patients_for_req = []
+
+    if req_rows:
+        st.dataframe(pd.DataFrame(req_rows), use_container_width=True)
+    else:
+        st.info("No requests yet (or database error above).")
+
+    if not patients_for_req:
+        st.warning("Add at least one **patient** before creating requests.")
+    else:
+        pid_labels = {
+            f'{r["full_name"]} (#{r["patient_id"]}) · hospital {r["hospital_id"]}': (
+                r["patient_id"],
+                r["hospital_id"],
+            )
+            for r in patients_for_req
+        }
+
+        blood_ex = st.expander("Add blood request", expanded=False)
+        with blood_ex:
+            choice_b = st.selectbox(
+                "Patient",
+                options=list(pid_labels.keys()),
+                key="req_b_pat",
+            )
+            pid_b, hid_b = pid_labels[choice_b]
+            urgency_b = st.slider(
+                "Urgency (1–5)",
+                min_value=1,
+                max_value=5,
+                value=3,
+                key="req_b_urg",
+            )
+            bg_req = st.text_input(
+                "Blood group required (e.g. O+)",
+                value="O+",
+                key="req_b_bg",
+            )
+            units_b = st.number_input(
+                "Units required",
+                min_value=1,
+                max_value=999,
+                value=2,
+                key="req_b_units",
+            )
+            req_by_date = st.date_input(
+                "Required by (date)",
+                value=date.today(),
+                key="req_b_by",
+            )
+            if st.button("Create blood request", key="req_b_btn"):
+                required_by = datetime.combine(req_by_date, time(12, 0))
+                try:
+                    with db.get_connection() as conn:
+                        with conn.cursor() as cur:
+                            cur.execute(
+                                """
+                                INSERT INTO request (
+                                    patient_id, hospital_id, request_type,
+                                    urgency_level, status
+                                ) VALUES (%s, %s, 'BLOOD', %s, 'OPEN')
+                                RETURNING request_id
+                                """,
+                                (pid_b, hid_b, int(urgency_b)),
+                            )
+                            rid = cur.fetchone()[0]
+                            cur.execute(
+                                """
+                                INSERT INTO blood_request_details (
+                                    request_id, blood_group_required,
+                                    units_required, required_by
+                                ) VALUES (%s, %s, %s, %s)
+                                """,
+                                (
+                                    rid,
+                                    bg_req.strip(),
+                                    int(units_b),
+                                    required_by,
+                                ),
+                            )
+                    _crud_queue_message(f"Blood request #{rid} created successfully.")
+                    st.rerun()
+                except Exception as exc:
+                    st.error(str(exc))
+
+        organ_ex = st.expander("Add organ request", expanded=False)
+        with organ_ex:
+            choice_o = st.selectbox(
+                "Patient",
+                options=list(pid_labels.keys()),
+                key="req_o_pat",
+            )
+            pid_o, hid_o = pid_labels[choice_o]
+            urgency_o = st.slider(
+                "Urgency (1–5)",
+                min_value=1,
+                max_value=5,
+                value=3,
+                key="req_o_urg",
+            )
+            organ_type = st.text_input(
+                "Organ type required (e.g. Kidney)",
+                value="Kidney",
+                key="req_o_type",
+            )
+            wait_days = st.number_input(
+                "Max wait time (days)",
+                min_value=0.1,
+                max_value=9999.0,
+                value=365.0,
+                step=0.1,
+                format="%.1f",
+                key="req_o_wait",
+            )
+            hla = st.text_area(
+                "HLA / clinical notes (optional)",
+                height=88,
+                key="req_o_hla",
+            )
+            if st.button("Create organ request", key="req_o_btn"):
+                notes = (hla or "").strip() or None
+                try:
+                    with db.get_connection() as conn:
+                        with conn.cursor() as cur:
+                            cur.execute(
+                                """
+                                INSERT INTO request (
+                                    patient_id, hospital_id, request_type,
+                                    urgency_level, status
+                                ) VALUES (%s, %s, 'ORGAN', %s, 'OPEN')
+                                RETURNING request_id
+                                """,
+                                (pid_o, hid_o, int(urgency_o)),
+                            )
+                            rid_o = cur.fetchone()[0]
+                            cur.execute(
+                                """
+                                INSERT INTO organ_request_details (
+                                    request_id, organ_type_required,
+                                    max_wait_time_days, hla_notes
+                                ) VALUES (%s, %s, %s, %s)
+                                """,
+                                (
+                                    rid_o,
+                                    organ_type.strip(),
+                                    float(wait_days),
+                                    notes,
+                                ),
+                            )
+                    _crud_queue_message(
+                        f"Organ request #{rid_o} created successfully."
+                    )
+                    st.rerun()
+                except Exception as exc:
+                    st.error(str(exc))
+
+    upd_req_ex = st.expander("Update request status", expanded=False)
+    with upd_req_ex:
+        if not req_rows:
+            st.info("No requests yet — create one above or load seed data.")
+        else:
+            req_labels = {
+                (
+                    f"#{r['request_id']} · {r['request_type']} · "
+                    f"{r['patient_name']} · current: {r['status']}"
+                ): r["request_id"]
+                for r in req_rows
+            }
+            pick_lbl = st.selectbox(
+                "Request",
+                options=list(req_labels.keys()),
+                key="req_stat_pick",
+            )
+            new_stat = st.selectbox(
+                "New status",
+                options=["OPEN", "MATCHED", "FULFILLED", "CANCELLED"],
+                key="req_stat_new",
+            )
+            if st.button("Save status", key="req_stat_btn"):
+                rid_pick = req_labels[pick_lbl]
+                try:
+                    db.execute(
+                        "UPDATE request SET status=%s WHERE request_id=%s",
+                        (new_stat, rid_pick),
+                    )
+                    _crud_queue_message(
+                        f"Request #{rid_pick} status set to {new_stat}."
+                    )
+                    st.rerun()
+                except Exception as exc:
+                    st.error(str(exc))
 
 
 with tab_assistant:

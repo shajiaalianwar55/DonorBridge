@@ -1,6 +1,6 @@
 # DonorBridge prototype (Streamlit)
 
-Small UI for **reports** against PostgreSQL **`report_*` views**, **basic CRUD** on `hospital` and `patient`, plus an **Assistant** tab — the same rule-based chatbot as `Chatbot/app.py`, embedded here.
+Small UI for **reports** against PostgreSQL **`report_*` views**, **basic CRUD** on `hospital`, `patient`, and **`request`** (blood / organ with detail rows), plus an **Assistant** tab — the same rule-based chatbot as `Chatbot/app.py`, embedded here.
 
 ## Prerequisites
 
